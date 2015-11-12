@@ -1,23 +1,23 @@
 
 pmodload 'helper'
 
-function prompt_austin_pwd {
+function prompt_slim_pwd {
   local pwd="${PWD/#$HOME/~}"
 
   if [[ "$pwd" == (#m)[/~] ]]; then
-	_prompt_austin_pwd="$MATCH"
+	_prompt_slim_pwd="$MATCH"
 	unset MATCH
   else
-	_prompt_austin_pwd="${${${${(@j:/:M)${(@s:/:)pwd}##.#?}:h}%/}//\%/%%}/${${pwd:t}//\%/%%}"
+	_prompt_slim_pwd="${${${${(@j:/:M)${(@s:/:)pwd}##.#?}:h}%/}//\%/%%}/${${pwd:t}//\%/%%}"
   fi
 }
 
-function prompt_austin_precmd {
+function prompt_slim_precmd {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
 
   # Format PWD.
-  prompt_austin_pwd
+  prompt_slim_pwd
 
   # Get Git repository information.
   if (( $+functions[git-info] )); then
@@ -26,14 +26,14 @@ function prompt_austin_precmd {
 }
 
 
-function prompt_austin_setup {
+function prompt_slim_setup {
 	setopt LOCAL_OPTIONS
 	unsetopt XTRACE KSH_ARRAYS
 	prompt_opts=(cr percent subst)
 
 	# Load required functions.
 	autoload -Uz add-zsh-hook
-	add-zsh-hook precmd prompt_austin_precmd
+	add-zsh-hook precmd prompt_slim_precmd
 
 	# Set editor-info parameters.
 
@@ -66,4 +66,4 @@ function prompt_austin_setup {
 	RPROMPT='${editor_info[overwrite]}%(?:: %F{red}⏎%f)${VIM:+" %B%F{green}V%f%b"}${INSIDE_EMACS:+" %B%F{green}E%f%b"}${git_info[rprompt]}'
 	SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 }
-prompt_austin_setup "$@"
+prompt_slim_setup "$@"
